@@ -54,8 +54,11 @@ export default function UsersPage({ users }: UsersPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch("/api/users");
+export const getServerSideProps: GetServerSideProps = async ({req}) => {
+  const protocol = req.headers["x-forwarded-proto"] || "http";
+  const host = req.headers.host; 
+  const res = await fetch(`${protocol}://${host}/api/users`);
+  //const res = await fetch("/api/users");
   const users = await res.json();
   return { props: { users } };
 };
